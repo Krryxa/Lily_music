@@ -1,8 +1,5 @@
 
-//播放对象
-function dom(id){
-	return document.getElementById(id);
-};
+
 
 // 音乐进度条拖动回调函数
 function krcallback(newVal) {
@@ -51,25 +48,33 @@ var krAudio = {
 	curentVoice:0, //当前音量
 	Currentplay:0, //当前播放的序号
 	allItem:0,  //当前播放列表的总数
+	orderModes:1, //播放模式，1为列表循环
 
 	init:function(){//播放器初始化
 		this.audioDom.volume = 0.5;  //初始音量为一半
 		this.allItem = $("#main-list").children('.list-item').length; //播放列表的总数
+		this.time(); //正在播放和播放结束
 		this.controlTime("music-progress"); //播放进度条
 		this.controlVoice("volume-progress"); //音量条
 	},
 
 	//设置播放的音乐地址
-	seturl:function(url){
+	seturl:function(){
+		if(this.Currentplay > this.allItem) this.Currentplay = 1;
+		if(this.Currentplay < 1) this.Currentplay = 1;
+		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
+		var url = currentObject.data("url");
 		this.audioDom.src = url;
 	},
 	
 	//播放
 	play:function(){
-		this.audioDom.play();
+		
 		$(".btn-play").addClass("btn-state-paused");   //恢复暂停按钮样式
 		$("#music-progress .mkpgb-dot").addClass("dot-move");   //增加小点闪烁效果
-		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //当前播放对象
+		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
+		this.audioDom.play(); //播放
+		currentObject.addClass("list-playing").siblings().removeClass("list-playing");  // 添加正在播放样式
 		//获取音乐标题
 		var music_title = currentObject.find(".music-name").text();
 		$(".progress_msg .music_title").text(music_title); //设置音乐标题
@@ -85,7 +90,8 @@ var krAudio = {
 		$("#music-progress .mkpgb-dot").removeClass("dot-move");   //取消小点闪烁效果
 	},
 	
-	time:function(){//时间
+	//时间：播放中、播放结束的监听事件
+	time:function(){
 
 		//播放中的函数 timeupdate
 		this.audioDom.addEventListener("timeupdate",function(){
@@ -105,12 +111,38 @@ var krAudio = {
 			$("#music-progress .mkpgb-cur").width(percent+"%");
 			$("#music-progress .mkpgb-dot").css("left",percent+"%"); 
 
-			//
+			//设置当前播放的时间
 			$(".current_time").text(krAudio.format(ctime));
 		});
+
 		//播放结束的时候
 		this.audioDom.addEventListener("ended",function(){
-			
+			//先设置暂停按钮的样式
+			$(".btn-play").removeClass("btn-state-paused");  //取消暂停按钮样式
+			$("#music-progress .mkpgb-dot").removeClass("dot-move");   //取消小点闪烁效果//先暂停
+
+			setTimeout(function(){
+				//1:列表循环   2:单曲循环  3:随机播放
+				switch(krAudio.orderModes) {
+			        case 2:     
+			            //不做任何事，已经设置了loop属性
+			            break;
+			            
+			        case 3:  
+			        	//随机获取播放序号
+			            var indexRan = Math.floor(Math.random() * krAudio.allItem)+1;
+			            krAudio.Currentplay = indexRan; //设置当前播放的序号
+			            listMenuStyleChange(krAudio.Currentplay);
+			            krAudio.seturl();
+			            krAudio.play();
+			            break;
+			            
+			        // case 1:
+			        default:
+			        	console.log(1)
+			            krAudio.next();  //直接下一首
+		 	    }
+			},400);
 		});
 	},
 	
@@ -125,25 +157,47 @@ var krAudio = {
 	next:function(){//下一首
 		this.Currentplay++;
 		if(this.Currentplay > this.allItem) this.Currentplay = 1;
-		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //当前播放对象
-		var url = currentObject.data("url");
-		this.seturl(url);
-		this.time();
+		listMenuStyleChange(this.Currentplay);
+    	//设置播放地址并播放
+		this.seturl();
 		this.play();
 	},
 	
 	prev:function(){//上一首
 		this.Currentplay--;
 		if(this.Currentplay < 1) this.Currentplay = 1;
-		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //当前播放对象
-		var url = currentObject.data("url");
-		this.seturl(url);
-		this.time();
+		listMenuStyleChange(this.Currentplay);
+    	//设置播放地址并播放
+		this.seturl();
 		this.play();
 	},
 	
-	randomMusic:function(){//随机播放
-		
+	//播放模式  1:列表循环   2:单曲循环  3:随机播放
+	ordermode:function(){
+		var orderDiv = $(".btn-order");
+	    orderDiv.removeClass();
+	    switch(krAudio.orderModes) {
+	        case 2:     // 单曲循环 -> 列表循环
+	            orderDiv.addClass("player-btn btn-order btn-order-list");
+	            orderDiv.attr("title", "列表循环");
+	            krAudio.audioDom.removeAttribute("loop");  //移除单曲循环的属性
+	            krAudio.orderModes = 1;
+	            break;
+	            
+	        case 3:     // 随机播放 -> 单曲循环
+	            orderDiv.addClass("player-btn btn-order btn-order-single");
+	            orderDiv.attr("title", "单曲循环");
+	            krAudio.audioDom.setAttribute("loop","");  //设置单曲循环的属性
+	            krAudio.orderModes = 2;
+	            break;
+	            
+	        // case 1:
+	        default:    // 列表循环 -> 随机播放
+	            orderDiv.addClass("player-btn btn-order btn-order-random");
+	            orderDiv.attr("title", "随机播放");
+	            krAudio.audioDom.removeAttribute("loop");  //移除单曲循环的属性 
+	            krAudio.orderModes = 3;
+	    }
 	},
 	
 	loadLrc:function(){//加载歌词
@@ -335,30 +389,39 @@ var krAudio = {
 	}
 };
 
+//默认的播放和暂停控制函数
+function palystop(){
+	var currobj = $("#main-list .list-item").eq(krAudio.Currentplay-1); //获取当前播放对象
+	//暂停
+	if(!krAudio.audioDom.paused){
+		krAudio.stop();
+        //自己变成播放样式
+    	currobj.find(".icon-play").replaceWith(playTag);	
+	}else{
+		//播放
+		//地址为空的时候，播放列表第一首
+		if(isEmpty(krAudio.audioDom.src)) {
+			krAudio.Currentplay = 1;//播放列表第一首
+			$(".list-item").eq(0).find(".icon-play").replaceWith(stopTag);
+			krAudio.seturl();
+			krAudio.play();
+		}else{ //播放
+			//自己变成播放样式
+    		currobj.find(".icon-play").replaceWith(stopTag);
+    		krAudio.play();
+		}
+	}
+}
 
 window.onload = function(){
 	//播放器初始化
 	krAudio.init();
-	//注册播放器事件
-	$(".list-item").click(function(){
-		krAudio.Currentplay = $(this).index();//当前播放的音乐序号
-		var url = $(this).data("url");
-		krAudio.seturl(url);
-		krAudio.time();
-		krAudio.play();
-	});
 
 	//播放暂停按钮
 	$(".btn-play").click(function(){
-		if(!krAudio.audioDom.paused){
-			krAudio.stop();
-		}else{
-			//地址不为空才播放
-			if(!isEmpty(krAudio.audioDom.src)) {
-				krAudio.play();
-			}
-		}
+		palystop();
 	});
+
 	//下一首
 	$(".btn-next").click(function(){
 		krAudio.next();
@@ -368,20 +431,11 @@ window.onload = function(){
 		krAudio.prev();
 	});
 
+	//点击播放模式
+	$(".btn-order").click(krAudio.ordermode); //播放模式
+
+	//列表小菜单初始化
+	appendlistMenu();
+
 };
 
-//判断非空
-function isEmpty(val) {
-	val = $.trim(val);
-	if (val == null)
-		return true;
-	if (val == undefined || val == 'undefined')
-		return true;
-	if (val == "")
-		return true;
-	if (val.length == 0)
-		return true;
-	if (!/[^(^\s*)|(\s*$)]/.test(val))
-		return true;
-	return false;
-}

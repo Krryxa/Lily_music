@@ -398,8 +398,14 @@ body {
     margin-left: 10px;
     cursor: pointer;
 }
-.list-playing .icon-play{
-    display: none;
+.list-playing .list-menu{
+    display: block;
+}
+.list-playing .icon-stops{
+    background-position: -80px 36px;
+}
+.list-playing .icon-stops:hover{
+    background-position: -120px 36px;
 }
 .icon-play {
     background-position: -80px 0;
@@ -870,5 +876,9 @@ body {
     -o-animation: dot-move 3s linear 2s infinite;
     -ms-animation: dot-move 3s linear 2s infinite;
 }
+
+/* 下载按钮 */
+#downabo{display: none;}
+
 @-webkit-keyframes dot-move{0%{-webkit-box-shadow: 0 0 20px #fff;}25%{-webkit-box-shadow: 0 0 10px #fff;}50%{-webkit-box-shadow: 0 0 0px #fff;}75%{-webkit-box-shadow: 0 0 10px #fff;}100%{-webkit-box-shadow: 0 0 20px #fff;}}
 @keyframes dot-move{0%{-webkit-box-shadow: 0 0 10px #363333;}25%{-webkit-box-shadow: 0 0 7px #363333;}50%{-webkit-box-shadow: 0 0 0px #fff;}75%{-webkit-box-shadow: 0 0 6px #fff;}100%{-webkit-box-shadow: 0 0 10px #363333;}}
