@@ -36,6 +36,9 @@
     
     <!-- layer弹窗插件 -->
     <link rel="stylesheet" href="plugns/layer/skin/default/layer.css?v=3.0.2302" id="layuicss-skinlayercss">
+
+    <!-- 加载动画 -->
+    <link type="text/css" rel="stylesheet" href="css/kr-loading.css" />
 </head>
 <body>
 
@@ -55,9 +58,11 @@
             <!-- tab按钮区 -->
             <div class="btn-box" id="btn-area">
                 <span class="btn" data-action="player" hidden>正在播放</span>
-                <span class="btn" data-action="playing" title="正在播放列表">播放列表</span>
-                <span class="btn" data-action="sheet" title="音乐播放列表">音乐歌单</span>
-                <span class="btn" data-action="search" title="点击搜索音乐">歌曲搜索</span>
+                <span class="btn active" data-action="list" title="正在播放列表">播放列表</span>
+            </div>
+            <div class="serchsongs">
+                <input type="text" name="keywords" maxlength="16" id="krserwords"/>
+                <div class="searchDivIcon"><span class="searchIcon"></span></div>
             </div>
         </div> 
         
@@ -67,46 +72,7 @@
             
             <!--音乐播放列表-->
             <div id="main-list" class="music-list data-box mCustomScrollbar" data-mcs-theme="minimal">
-                <div class="listitems list-head">
-                    <span class="music-album">时长</span>
-                    <span class="auth-name">歌手</span>
-                    <span class="music-name">歌曲</span>
-                </div>
-                <div class="list-item" data-url="mp3/Midaho 兔裹煎蛋卷 - 闻说笔端有风月.mp3">
-                    <span class="list-num">1</span>
-                    <span class="list-mobile-menu"></span>
-                    <span class="music-album">04:20</span>
-                    <span class="auth-name">Midaho 兔裹煎蛋卷</span>
-                    <span class="music-name">Midaho 兔裹煎蛋卷 - 闻说笔端有风月</span>
-                </div>
-                <div class="list-item" data-url="mp3/Nobody-Wonder Girls.mp3">
-                    <span class="list-num">2</span>
-                    <span class="list-mobile-menu"></span>
-                    <span class="music-album">04:20</span>
-                    <span class="auth-name">周杰伦</span>
-                    <span class="music-name">Nobody-Wonder Girls</span>
-                </div>
-                <div class="list-item" data-url="mp3/July - In The Wind.mp3">
-                    <span class="list-num">3</span>
-                    <span class="list-mobile-menu"></span>
-                    <span class="music-album">04:20</span>
-                    <span class="auth-name">周杰伦</span>
-                    <span class="music-name">July - In The Wind</span>
-                </div>
-                <div class="list-item" data-url="mp3/FLOWER - 太陽と向日葵.mp3">
-                    <span class="list-num">4</span>
-                    <span class="list-mobile-menu"></span>
-                    <span class="music-album">04:20</span>
-                    <span class="auth-name">周杰伦</span>
-                    <span class="music-name">FLOWER - 太陽と向日葵</span>
-                </div>
-                <div class="list-item" data-url="mp3/DAISHI DANCE - if.mp3">
-                    <span class="list-num">5</span>
-                    <span class="list-mobile-menu"></span>
-                    <span class="music-album">04:20</span>
-                    <span class="auth-name">周杰伦</span>
-                    <span class="music-name">DAISHI DANCE - if</span>
-                </div>
+                
             </div>
         </div>
         
@@ -183,17 +149,24 @@
 <!-- layer弹窗插件 -->
 <script src="plugns/layer/layer.js"></script>
 
-<!-- 列表方法插件 -->
+<script src="js/sg.js"></script>
+<script src="js/kr_util.js"></script>
+
+<!-- 列表方法 -->
 <script src="js/list_function.js"></script>
 
-<!-- 注册播放器插件 -->
+<!-- 注册播放器 -->
 <script src="js/music_play.js"></script>
+
+<!-- 装载歌词 -->
+<script src="js/lyric.js"></script>
 
 <!-- 滚动条美化插件 -->
 <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
 
 <!-- 背景模糊化插件 -->
 <script src="js/background-blur.min.js"></script>
+
 
 </body>
 </html>

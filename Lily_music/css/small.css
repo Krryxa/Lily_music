@@ -17,6 +17,9 @@
     }
     
     /* 按钮工具条区域 */
+    #btn-area span{
+        display: block;
+    }
     .btn-bar {
         height: 35px;
         right: 0;
@@ -34,7 +37,7 @@
     .btn {
         margin: 0;
         padding: 0;
-        width: 25%;
+        width: 50%;
         height: 100%;
         display: block;
         float: left;
@@ -52,6 +55,10 @@
         border-bottom: 3px solid #A2A0A0;
         margin-top: -3px;
     }
+    /*搜索*/
+    .serchsongs{
+        top:45px;
+    }
     
     /* 中部容器区域 */
     .data-area {
@@ -61,6 +68,7 @@
     /*数据区域占满整个屏幕*/
     .data-area {
         right: 0;
+        top: 66px;
     }
     
     

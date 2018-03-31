@@ -50,7 +50,8 @@ $(".music-list").on("click",".icon-play,.icon-download,.icon-share", function() 
         	break;
         case "download":    // 下载
         	var url = $(this).parents(".list-item").data("url");
-            thisDownload(url);
+        	var title = $(this).parents(".list-item").find(".music-name-cult").text();
+            thisDownload(url,title);
         	break;
         case "share":   // 分享
             alert("敬请期待")
@@ -104,16 +105,114 @@ $(".btn-download").click(function(){
 	if(krAudio.Currentplay == 0) return;
 	var obj = $("#main-list .list-item").eq(krAudio.Currentplay-1); //当前播放对象
 	var url = obj.data("url");
-	thisDownload(url);
+	var title = obj.find(".music-name-cult").text();
+    thisDownload(url,title);
 });
 
 // 下载正在播放的这首歌
-function thisDownload(url) {
+function thisDownload(url,title) {
 	//下载
 	var eledow = dom("downabo");
 	eledow.setAttribute("href",url);
+	eledow.setAttribute("download",title+".mp3");
 	eledow.click();
 }
+
+// 移动端顶部按钮点击处理
+$(".btn").click(function(){
+    switch($(this).data("action")) {
+        case "player":    // 播放器
+            dataBox("player");
+        break;
+        case "list": // 播放列表
+            dataBox("list"); // 显示正在播放列表
+        break;
+    }
+});
+
+// 移动端选择顶部栏要显示的信息
+// 参数：要显示的信息（list、player）
+function dataBox(choose) {
+    $('.btn-box .active').removeClass('active');
+    switch(choose) {
+        case "list":    // 显示播放列表
+            if($(".btn[data-action='player']").css('display') !== 'none') {
+                $("#player").hide();
+            } else if ($("#player").css('display') == 'none') {
+                $("#player").fadeIn();
+            }
+            $("#main-list").fadeIn();
+            $("#sheet").fadeOut();
+            $(".serchsongs").show(); //搜索栏显示
+            $(".btn[data-action='list']").addClass('active');
+            
+        break;
+        case "player":  // 显示播放器
+            $("#player").fadeIn();
+            $("#sheet").fadeOut();
+            $("#main-list").fadeOut();
+            $(".serchsongs").hide();  //搜索栏隐藏
+            $(".btn[data-action='player']").addClass('active');
+        break;
+    }
+}
+
+/* 初始化背景根据图片虚化效果 */
+function initblurImgs(){
+	if(isMobile) {  // 移动端采用另一种模糊方案
+        $('#blur-img').html('<div class="blured-img" id="mobile-blur"></div><div class="blur-mask mobile-mask"></div>');
+    } else {
+        // 背景图片初始化
+        $('#blur-img').backgroundBlur({
+            //imageURL : imageURL, // URL to the image that will be used for blurring
+            blurAmount : 50, // 模糊度
+            imageClass : 'blured-img', // 背景区应用样式
+            overlayClass : 'blur-mask', // 覆盖背景区class，可用于遮罩或额外的效果
+            duration: 1000, // 图片淡出时间
+            endOpacity : 1 // 图像最终的不透明度
+        });
+    }
+    
+    $('.blur-mask').fadeIn(1000);   // 遮罩层淡出
+}
+
+/* 更换背景图片，动画效果 */
+function blurImages(img){
+	var animate = false;
+	var imgload = false;
+	if(isMobile){    
+        $("#music-cover").load(function(){
+            $("#mobile-blur").css('background-image', 'url("' + img + '")');
+        });
+    }  //PC端封面
+    else if(!isMobile){ 
+        $("#music-cover").load(function(){
+            if(animate) {   // 渐变动画也已完成
+                $("#blur-img").backgroundBlur(img);    // 替换图像并淡出
+                $("#blur-img").animate({opacity:"1"}, 1500); // 背景更换特效
+            } else {
+                imgload = true;     // 告诉下面的函数，图片已准备好
+            }
+            
+        });
+        
+        // 渐变动画
+        $("#blur-img").animate({opacity: "0.2"}, 1000, function(){
+            if(imgload) {   // 如果图片已经加载好了
+                $("#blur-img").backgroundBlur(img);    // 替换图像并淡出
+                $("#blur-img").animate({opacity:"1"}, 1500); // 背景更换特效
+            } else {
+                animate = true;     // 等待图像加载完
+            }
+        });
+    }
+}
+
+// 图片加载失败处理
+$('img').error(function(){
+    $(this).attr('src', 'images/player_cover.png');
+});
+
 
 //判断非空
 function isEmpty(val) {
@@ -130,3 +229,110 @@ function isEmpty(val) {
 		return true;
 	return false;
 }
+
+/* 默认首页是网易云音乐热歌榜，处理返回的json数据用了一点es6的语法 */
+function indexSong(){
+	var count = 1;
+	loading("加载中...",500);
+	$.ajax({
+		url: 'https://api.hibai.cn/api/index/index',
+		type: 'POST',
+		data: {"TransCode":"020117","OpenId":"Test","Body":{}},
+		success:function(data){
+			var NECsongs = data.Body; //是个数组对象，存放多个json数据
+			var length = NECsongs.length;
+			var html = `<div class="listitems list-head">
+		                    <span class="music-album">时长</span>
+		                    <span class="auth-name">歌手</span>
+		                    <span class="music-name">歌曲</span>
+		                </div>`;
+			for(var vals of NECsongs){
+				html += `<div class="list-item" data-url="${vals.url}" data-pic="${vals.pic}" data-lrc="${vals.lrc}">
+	                    <span class="list-num">${count}</span>
+	                    <span class="list-mobile-menu"></span>
+	                    <span class="music-album">04:20</span>
+	                    <span class="auth-name">${vals.author}</span>
+	                    <span class="music-name">${vals.title}</span>
+	                </div>`;
+                count++;
+			}
+			html += `<div class="list-item text-center" title="全部加载完了哦~" id="list-foot">全部加载完了哦~</div>`;
+			$("#mCSB_1_container").html(html);
+			// 播放列表滚动到顶部
+			listToTop();
+			tzUtil.animates($("#tzloading"),"slideUp");
+			//刷新播放列表的总数
+			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
+			//更新列表小菜单
+			appendlistMenu();
+
+		}
+	});
+}
+
+
+/* 更据关键词搜索，处理返回的json数据用了一点es6的语法 */
+function searchSong(keywords){
+	var count = 1;
+	loading("搜索中...",500);
+	$.ajax({
+		url: 'https://api.hibai.cn/api/index/index',
+		type: 'POST',
+		data: {"TransCode":"020441","OpenId":"Test","Body":{"key":keywords}},
+		success:function(data){
+			var NECsongs = data.Body["NEC"]; //是个数组对象，存放多个json数据
+			var length = NECsongs.length;
+			var html = `<div class="listitems list-head">
+		                    <span class="music-album">时长</span>
+		                    <span class="auth-name">歌手</span>
+		                    <span class="music-name">歌曲</span>
+		                </div>`;
+			for(var vals of NECsongs){
+				html += `<div class="list-item" data-url="${vals.url}" data-pic="${vals.pic}" data-lrc="${vals.lrc}">
+	                    <span class="list-num">${count}</span>
+	                    <span class="list-mobile-menu"></span>
+	                    <span class="music-album">04:20</span>
+	                    <span class="auth-name">${vals.author}</span>
+	                    <span class="music-name">${vals.title}</span>
+	                </div>`;
+                count++;
+			}
+			html += `<div class="list-item text-center" title="全部加载完了哦~" id="list-foot">全部加载完了哦~</div>`;
+			$("#mCSB_1_container").html(html);
+			//播放列表滚动到顶部
+			listToTop();
+			tzUtil.animates($("#tzloading"),"slideUp");
+			//刷新播放列表的总数
+			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
+			//更新列表小菜单
+			appendlistMenu();
+
+		}
+	});
+}
+
+// 播放列表滚动到顶部
+function listToTop() {
+    if(isMobile) {
+        $("#main-list").animate({scrollTop: 0}, 200);
+    } else {
+        $("#main-list").mCustomScrollbar("scrollTo", 0, "top");
+    }
+}
+
+
+/* 点击搜索按钮或者在文本框回车搜索 */
+$(".searchDivIcon").click(function() {
+	var keywords = $("#krserwords").val();
+	if(isEmpty(keywords)) return;
+	searchSong(keywords);//进行搜索
+});
+
+$("#krserwords").keyup(function(event){
+	var keywords = $("#krserwords").val();
+	if(event.keyCode ==13){
+		if(isEmpty(keywords)) return;
+		searchSong(keywords);//进行搜索
+	}
+});
+

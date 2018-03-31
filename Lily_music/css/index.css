@@ -168,17 +168,60 @@ body {
     display: inline-block;
     left: 0;
     right: 400px;
-    height: 55px;
+    height: 74px;
 }
 
+/* 搜素框 */
+.serchsongs{
+    position: absolute;
+    top: 20px;
+    left: 12px;
+    height: 28px;
+    outline: none;
+    border: 1px solid rgba(150,150,150,.3);
+    width: 97%;
+    background: transparent;
+    border-radius: 2px;
+}
+.serchsongs input{
+    width: 94%;
+    background: transparent;
+    border: none;
+    height: 100%;
+    color: rgba(225,225,225,.8);
+    outline: none;
+    text-indent: 8px;
+    font-size: 14px;
+}
+.serchsongs .searchDivIcon{
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor:pointer;
+}
+.serchsongs .searchIcon{
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    border: 0 none;
+    width: 16px;
+    height: 16px;
+    background: url(../images/icon_sprite.png);
+    background-position: 0 -40px;
+}
 
 /* 顶部按钮区域 */
 .btn-box {
     position: absolute;
-    top: 10px;
+    top: 0;
     bottom: 10px;
     left: 10px;
     right: 10px;
+}
+#btn-area span{
+    display: none;
 }
 /* 常规按钮 */
 .btn {
@@ -255,7 +298,7 @@ body {
     position: absolute;
     left: 0;
     right: 400px;
-    top: 60px;
+    top: 50px;
     bottom: 0;
     overflow: hidden;
 }

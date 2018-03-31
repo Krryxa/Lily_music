@@ -6,6 +6,8 @@ function krcallback(newVal) {
     var newTime = krAudio.audioDom.duration * newVal;
     // 应用新的进度
     krAudio.audioDom.currentTime = newTime;
+    // 强制滚动歌词到当前进度
+    refreshLyric(newTime);  
 }
 
 //获取并设置移动的百分比, flag:true代表是进度条，false代表是音量条
@@ -75,12 +77,17 @@ var krAudio = {
 		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
 		this.audioDom.play(); //播放
 		currentObject.addClass("list-playing").siblings().removeClass("list-playing");  // 添加正在播放样式
+		//设置专辑封面
+		var pic = currentObject.data("pic");
+		$("#music-cover").attr("src",pic);
+		//背景切换图片
+		blurImages(pic);
 		//获取音乐标题
 		var music_title = currentObject.find(".music-name").text();
 		$(".progress_msg .music_title").text(music_title); //设置音乐标题
-		//获取音乐总时间
-		var music_time = currentObject.find(".music-album").text();
-		$(".all_time").text(music_time); //设置当前音乐总时间
+		//获取歌词
+		var lrcSrc = currentObject.data("lrc");
+		lyricCallback(lrcSrc);
 	},
 	
 	//暂停
@@ -98,7 +105,9 @@ var krAudio = {
 			krAudio.locked = false; //进度条解锁
 			//获取总时长
 			var time = this.duration;
-			//当前获取播放时长
+			if(!isNaN(time)) $(".all_time").text(krAudio.format(time)); //设置当前音乐总时间
+
+			//当前获取播放时长，单位：秒
 			var ctime = this.currentTime;
 			var percent = ((ctime / this.duration) * 100).toFixed(2);
 
@@ -113,6 +122,9 @@ var krAudio = {
 
 			//设置当前播放的时间
 			$(".current_time").text(krAudio.format(ctime));
+
+			// 同步歌词显示	
+			scrollLyric(ctime);
 		});
 
 		//播放结束的时候
@@ -413,7 +425,14 @@ function palystop(){
 	}
 }
 
+
 window.onload = function(){
+
+	//加载歌曲，默认首页是网易云音乐热歌榜
+	indexSong();
+	//背景更据专辑图片虚化
+	initblurImgs();
+
 	//播放器初始化
 	krAudio.init();
 
