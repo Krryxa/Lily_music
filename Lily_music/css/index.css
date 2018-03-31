@@ -326,7 +326,7 @@ body {
     display: block;
     width: auto;
     margin-left: 40px;
-    margin-right: 300px;
+    margin-right: 270px;
     height: 100%;
     -webkit-user-select: none;
     -moz-user-select: none; /*禁止双击选定*/
@@ -340,20 +340,22 @@ body {
 }
 /* 鼠标滑过时音乐名字被截断 */
 .music-name-cult {
+    max-width: 300px;
     display: block;
     word-break: keep-all;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
+} 
 .list-item:hover .music-name-cult {
     padding-right: 150px;
 }
-.list-playing:hover .music-name-cult {
-    padding-right: 100px;
+.list-playing .music-name-cult {
+    padding-right: 150px;
 }
-/* 作者名称与音乐专辑 */
-.auth-name,.music-album {
+/* 作者名称与音乐时长 */
+.auth-name{
+    margin-right: 12px;
     position: relative;
     display: block;
     width: 150px;
@@ -364,6 +366,18 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.music-album {
+    position: relative;
+    display: block;
+    width: 100px;
+    float: right;
+    height: 100%;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* 移动端的菜单图标 */
 .list-mobile-menu {
     display: none;

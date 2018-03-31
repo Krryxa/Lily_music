@@ -1,7 +1,7 @@
 @charset "utf-8";
 
-/* 小于 900px 采用这个样式 */
-@media screen and (max-width: 900px) {
+/* 小于 895px 采用这个样式 */
+@media screen and (max-width: 895px) {
     /*隐藏头部logo*/
     .header {
         display: none;
