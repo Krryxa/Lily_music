@@ -191,14 +191,18 @@
     .footer {
         height: 60px;
     }
-    /*歌曲信息隐藏*/
+    /*歌曲信息降高一点 */
     .progress_msg{
+        top: 17%;
+    }
+    /* 进度条上的歌曲名称隐藏 */
+    .progress_msg .music_title{
         display: none;
     }
-    /*歌曲进度条移为水平*/
+    /*歌曲进度条移为水平
     .progress-box{
         top: 50%;
-    }
+    }*/
 }
 
 /* 小于 350px 采用这个样式 */
