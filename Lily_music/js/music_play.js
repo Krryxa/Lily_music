@@ -71,7 +71,7 @@ var krAudio = {
 	
 	//播放
 	play:function(){
-		
+		$(".btn-play").attr("title","暂停");
 		$(".btn-play").addClass("btn-state-paused");   //恢复暂停按钮样式
 		$("#music-progress .mkpgb-dot").addClass("dot-move");   //增加小点闪烁效果
 		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
@@ -96,6 +96,7 @@ var krAudio = {
 	//暂停
 	stop:function(){
 		this.audioDom.pause();
+		$(".btn-play").attr("title","播放");
 		$(".btn-play").removeClass("btn-state-paused");  //取消暂停按钮样式
 		$("#music-progress .mkpgb-dot").removeClass("dot-move");   //取消小点闪烁效果
 	},
