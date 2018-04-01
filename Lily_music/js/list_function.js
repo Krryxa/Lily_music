@@ -54,7 +54,7 @@ $(".music-list").on("click",".icon-play,.icon-download,.icon-share", function() 
             thisDownload(url,title);
         	break;
         case "share":   // 分享
-            alert("敬请期待")
+            loading("敬请期待...",5);
         	break;
     }
     return true;
@@ -91,13 +91,13 @@ function listMenuStyleChange(Currindex){
 
 
 // 移动端列表项单击播放
-$(".music-list .list-item").click(function() {
+function mobileClickPlay(){
     if(isMobile) {
         krAudio.Currentplay = $(this).index();//当前播放的音乐序号
 		krAudio.seturl();
 		krAudio.play();
     }
-});
+}
 
 //点击右下方的下载按钮
 $(".btn-download").click(function(){
@@ -233,7 +233,7 @@ function isEmpty(val) {
 /* 默认首页是网易云音乐热歌榜，处理返回的json数据用了一点es6的语法 */
 function indexSong(){
 	var count = 1;
-	loading("加载中...",500);
+	loading("加载中-云音乐热歌榜...",500);
 	$.ajax({
 		url: 'https://api.hibai.cn/api/index/index',
 		type: 'POST',
@@ -260,11 +260,13 @@ function indexSong(){
 			$("#mCSB_1_container").html(html);
 			// 播放列表滚动到顶部
 			listToTop();
-			tzUtil.animates($("#tzloading"),"slideUp");
+			tzUtil.animates($("#tzloading"),"slideUp");//加载动画消失
 			//刷新播放列表的总数
 			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
 			//更新列表小菜单
 			appendlistMenu();
+			//移动端列表点击播放
+			$(".music-list .list-item").click(mobileClickPlay);
 
 		}
 	});
@@ -301,12 +303,13 @@ function searchSong(keywords){
 			$("#mCSB_1_container").html(html);
 			//播放列表滚动到顶部
 			listToTop();
-			tzUtil.animates($("#tzloading"),"slideUp");
+			tzUtil.animates($("#tzloading"),"slideUp");//加载动画消失
 			//刷新播放列表的总数
 			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
 			//更新列表小菜单
 			appendlistMenu();
-
+			//移动端列表点击播放
+			$(".music-list .list-item").click(mobileClickPlay);
 		}
 	});
 }

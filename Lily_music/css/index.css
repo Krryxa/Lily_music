@@ -173,13 +173,12 @@ body {
 
 /* 搜素框 */
 .serchsongs{
-    position: absolute;
-    top: 20px;
-    left: 12px;
+    position: relative;
+    margin: 20px auto;
     height: 28px;
     outline: none;
     border: 1px solid rgba(150,150,150,.3);
-    width: 97%;
+    width: 95.7%;
     background: transparent;
     border-radius: 2px;
 }
