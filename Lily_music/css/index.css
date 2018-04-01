@@ -933,6 +933,11 @@ body {
     -ms-animation: dot-move 3s linear 2s infinite;
 }
 
+/* 弹出层自定义样式 */
+.mylayerClass{
+    color: rgb(212, 212, 212);
+}
+
 /* 下载按钮 */
 #downabo{display: none;}
 

@@ -102,7 +102,10 @@ function mobileClickPlay(){
 //点击右下方的下载按钮
 $(".btn-download").click(function(){
 	//如果未选择音乐，不能下载
-	if(krAudio.Currentplay == 0) return;
+	if(krAudio.Currentplay == 0){
+		loading("选择播放的歌曲哦~",5);
+		return;	
+	} 
 	var obj = $("#main-list .list-item").eq(krAudio.Currentplay-1); //当前播放对象
 	var url = obj.data("url");
 	var title = obj.find(".music-name-cult").text();
@@ -247,10 +250,11 @@ function indexSong(){
 		                    <span class="music-name">歌曲</span>
 		                </div>`;
 			for(var vals of NECsongs){
+				var ctime = krAudio.format(vals.time);
 				html += `<div class="list-item" data-url="${vals.url}" data-pic="${vals.pic}" data-lrc="${vals.lrc}">
 	                    <span class="list-num">${count}</span>
 	                    <span class="list-mobile-menu"></span>
-	                    <span class="music-album">04:20</span>
+	                    <span class="music-album">${ctime}</span>
 	                    <span class="auth-name">${vals.author}</span>
 	                    <span class="music-name">${vals.title}</span>
 	                </div>`;
@@ -267,7 +271,8 @@ function indexSong(){
 			appendlistMenu();
 			//移动端列表点击播放
 			$(".music-list .list-item").click(mobileClickPlay);
-
+			//移动端列表右边信息按钮的点击
+			$(".list-mobile-menu").click(mobileListMenu);
 		}
 	});
 }
@@ -275,6 +280,7 @@ function indexSong(){
 
 /* 更据关键词搜索，处理返回的json数据用了一点es6的语法 */
 function searchSong(keywords){
+	$("#krserwords").blur();  //文本框失焦
 	var count = 1;
 	loading("搜索中...",500);
 	$.ajax({
@@ -290,10 +296,11 @@ function searchSong(keywords){
 		                    <span class="music-name">歌曲</span>
 		                </div>`;
 			for(var vals of NECsongs){
+				var ctime = krAudio.format(vals.time);
 				html += `<div class="list-item" data-url="${vals.url}" data-pic="${vals.pic}" data-lrc="${vals.lrc}">
 	                    <span class="list-num">${count}</span>
 	                    <span class="list-mobile-menu"></span>
-	                    <span class="music-album">04:20</span>
+	                    <span class="music-album">${ctime}</span>
 	                    <span class="auth-name">${vals.author}</span>
 	                    <span class="music-name">${vals.title}</span>
 	                </div>`;
@@ -310,17 +317,15 @@ function searchSong(keywords){
 			appendlistMenu();
 			//移动端列表点击播放
 			$(".music-list .list-item").click(mobileClickPlay);
+			//移动端列表右边信息按钮的点击
+			$(".list-mobile-menu").click(mobileListMenu);
 		}
 	});
 }
 
 // 播放列表滚动到顶部
 function listToTop() {
-    if(isMobile) {
-        $("#main-list").animate({scrollTop: 0}, 200);
-    } else {
-        $("#main-list").mCustomScrollbar("scrollTo", 0, "top");
-    }
+    $("#main-list").mCustomScrollbar("scrollTo", 0, "top");
 }
 
 
@@ -339,3 +344,42 @@ $("#krserwords").keyup(function(event){
 	}
 });
 
+//当前播放歌曲的详细信息的按钮点击
+$("#music-info").click(function(){
+	if(isEmpty(krAudio.audioDom.src)) {
+		loading("选择播放的歌曲哦~",5);
+	}else{
+		musicInfo(krAudio.Currentplay-1);
+	}
+});
+
+//移动端的每首歌点击详细信息的按钮
+function mobileListMenu(){
+	var index = $(this).parents(".list-item").index();
+	musicInfo(index);
+	//取消冒泡，防止点击播放
+	return false;
+};
+
+// 展现系统列表中任意首歌的歌曲信息（或者当前歌曲）
+function musicInfo(index) {
+    var currentObject = $("#main-list .list-item").eq(index); //获取点击的对象
+    var title = currentObject.find(".music-name-cult").text();
+    var url = currentObject.data("url");
+    var tempStr = `<span class="info-title">歌名：</span>${title}
+				    <br><span class="info-title">歌手：</span>${currentObject.find(".auth-name").text()}
+				    <br><span class="info-title">时长：</span>${currentObject.find(".music-album").text()}`;
+    
+    tempStr += `<br><span class="info-title">操作：</span>
+    		<span class="info-btn" onclick="thisDownload('${url}','${title}')">下载</span>`;
+    
+    layer.open({
+        type: 0,
+        closeBtn:0,
+        shadeClose:true,
+        title: false, //不显示标题
+        btn: false,
+        skin :'mylayerClass',
+        content: tempStr
+    });
+}
