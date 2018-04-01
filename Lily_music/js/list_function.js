@@ -356,7 +356,7 @@ $("#music-info").click(function(){
 //移动端的每首歌点击详细信息的按钮
 function mobileListMenu(){
 	var index = $(this).parents(".list-item").index();
-	musicInfo(index);
+	musicInfo(index-1);
 	//取消冒泡，防止点击播放
 	return false;
 };
