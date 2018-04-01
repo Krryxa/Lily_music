@@ -84,7 +84,10 @@ var krAudio = {
 		blurImages(pic);
 		//获取音乐标题
 		var music_title = currentObject.find(".music-name").text();
-		$(".progress_msg .music_title").text(music_title); //设置音乐标题
+		//获取音乐作者
+		var author = currentObject.find(".auth-name").text();
+		$(".progress_msg .music_title").text(music_title+" - "+author); //设置音乐标题
+		$(document).attr("title",music_title+" - "+author); //设置网页标题
 		//获取歌词
 		var lrcSrc = currentObject.data("lrc");
 		lyricCallback(lrcSrc);
