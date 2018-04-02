@@ -236,11 +236,11 @@ function isEmpty(val) {
 /* 默认首页是网易云音乐热歌榜，处理返回的json数据用了一点es6的语法 */
 function indexSong(){
 	var count = 1;
-	loading("加载中-云音乐热歌榜...",500);
+	loading("加载中-QQ音乐热歌榜...",500);
 	$.ajax({
 		url: 'https://api.hibai.cn/api/index/index',
 		type: 'POST',
-		data: {"TransCode":"020117","OpenId":"Test","Body":{}},
+		data: {"TransCode":"020337","OpenId":"Test","Body":{}},
 		success:function(data){
 			var NECsongs = data.Body; //是个数组对象，存放多个json数据
 			var length = NECsongs.length;
@@ -278,7 +278,7 @@ function indexSong(){
 }
 
 
-/* 更据关键词搜索，处理返回的json数据用了一点es6的语法 */
+/* 更据关键词搜索，处理返回的json数据用了一点es6的语法 接入qq音乐搜索 */
 function searchSong(keywords){
 	$("#krserwords").blur();  //文本框失焦
 	var count = 1;
@@ -286,9 +286,9 @@ function searchSong(keywords){
 	$.ajax({
 		url: 'https://api.hibai.cn/api/index/index',
 		type: 'POST',
-		data: {"TransCode":"020441","OpenId":"Test","Body":{"key":keywords}},
+		data: {"TransCode":"020336","OpenId":"Test","Body":{"key":keywords}},
 		success:function(data){
-			var NECsongs = data.Body["NEC"]; //是个数组对象，存放多个json数据
+			var NECsongs = data.Body; //是个数组对象，存放多个json数据
 			var length = NECsongs.length;
 			var html = `<div class="listitems list-head">
 		                    <span class="music-album">时长</span>

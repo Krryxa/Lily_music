@@ -25,6 +25,7 @@ function lyricCallback(url) {
             }
 
             lyricText = parseLyric(data);    // 解析获取到的歌词
+
             if(lyricText === '') {
                 lyricTip('乐诗、悦动你的生活');
                 return false;
@@ -39,6 +40,10 @@ function lyricCallback(url) {
             var i = 0;
             for(var k in lyricText){
                 var txt = lyricText[k];
+                if(txt.indexOf('纯音乐') != -1){
+                    lyricTip('乐诗、悦动你的生活');
+                    return false;
+                }
                 if(!txt) txt = "&nbsp;";
                 var li = $("<li data-no='"+i+"' class='lrc-item'>"+txt+"</li>");
                 lyricArea.append(li);
