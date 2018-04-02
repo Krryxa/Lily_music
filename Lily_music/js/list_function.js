@@ -366,11 +366,15 @@ function musicInfo(index) {
     var currentObject = $("#main-list .list-item").eq(index); //获取点击的对象
     var title = currentObject.find(".music-name-cult").text();
     var url = currentObject.data("url");
-    var tempStr = `<span class="info-title">歌名：</span>${title}
-				    <br><span class="info-title">歌手：</span>${currentObject.find(".auth-name").text()}
-				    <br><span class="info-title">时长：</span>${currentObject.find(".music-album").text()}`;
+    var lrc = currentObject.data("lrc");
+    var tempStr = `<span class="info-title">歌曲：</span> ${title}
+				    <br><span class="info-title">歌手：</span> ${currentObject.find(".auth-name").text()}
+				    <br><span class="info-title">时长：</span> ${currentObject.find(".music-album").text()}`;
     
-    tempStr += `<br><span class="info-title">操作：</span>
+    tempStr += `<br><span class="info-title">链接：</span>
+    		<span class="info-btn" id="info-songs" data-text="${url}">歌曲&nbsp;&nbsp;</span>
+    		<span class="info-btn" id="info-lrcs" data-text="${lrc}">歌词</span><br>
+    		<span class="info-title">操作：</span>
     		<span class="info-btn" onclick="thisDownload('${url}','${title}')">下载</span>`;
     
     layer.open({
@@ -382,4 +386,26 @@ function musicInfo(index) {
         skin :'mylayerClass',
         content: tempStr
     });
+    /* 实现点击复制歌曲链接、歌词链接 */
+    zclips("#info-songs");
+	zclips("#info-lrcs");
 }
+
+/* 实现点击复制歌曲链接、歌词链接 */
+function zclips(obj){
+	var clipboard = new ClipboardJS(obj, {
+        text: function() {
+            return $(obj).data("text");
+        }
+    });
+
+    clipboard.on('success', function(e) {
+        loading("复制成功",5);
+    });
+
+    clipboard.on('error', function(e) {
+        loading("复制失败",5);
+    });
+}
+
+

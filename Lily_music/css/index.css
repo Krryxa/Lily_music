@@ -669,12 +669,11 @@ body {
     color: #B2AFAF
 }
 .info-btn {
+    text-decoration: none;
     cursor: pointer;
-    color: #31c27c;
+    color: #e28000;
 }
-.info-btn:hover {
-    text-decoration: underline;
-}
+
 /* 底部 */
 .footer {
     height: 100px;
@@ -940,6 +939,9 @@ body {
 
 /* 下载按钮 */
 #downabo{display: none;}
+
+/* 复制按钮位置调整 */
+.ZeroClipboardMoviess{margin-top: -17px;}
 
 @-webkit-keyframes dot-move{0%{-webkit-box-shadow: 0 0 20px #fff;}25%{-webkit-box-shadow: 0 0 10px #fff;}50%{-webkit-box-shadow: 0 0 0px #fff;}75%{-webkit-box-shadow: 0 0 10px #fff;}100%{-webkit-box-shadow: 0 0 20px #fff;}}
 @keyframes dot-move{0%{-webkit-box-shadow: 0 0 10px #363333;}25%{-webkit-box-shadow: 0 0 7px #363333;}50%{-webkit-box-shadow: 0 0 0px #fff;}75%{-webkit-box-shadow: 0 0 6px #fff;}100%{-webkit-box-shadow: 0 0 10px #363333;}}

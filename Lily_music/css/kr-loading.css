@@ -1,4 +1,4 @@
  /*loadingÌáÊ¾¿ò*/
-.tzui-loading{background:rgba(14, 14, 14, 0.72) ;display:inline-block;color:#fff;box-shadow:5px 5px 1em #151515;position:fixed;padding:6px 2px 6px 20px;z-index:1000}
+.tzui-loading{background:rgba(0, 0, 0, 0.84) ;display:inline-block;color:#fff;box-shadow:0px 0px 7px #151515;position:fixed;padding:6px 2px 6px 20px;z-index:99991000}
 .tzui-loading .tzui-loading-cnt{padding:4px 24px;width:100%;}
 .tzui-loading .tzui-loading-gif{padding:16px;float:left;background:url(../images/loading.gif) no-repeat 5px center;}
