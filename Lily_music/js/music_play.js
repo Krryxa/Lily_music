@@ -74,23 +74,26 @@ var krAudio = {
 		$(".btn-play").attr("title","暂停");
 		$(".btn-play").addClass("btn-state-paused");   //恢复暂停按钮样式
 		$("#music-progress .mkpgb-dot").addClass("dot-move");   //增加小点闪烁效果
-		var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
+		//如果播放的是搜索之前的那首歌，点击暂停，再播放后应该是继续这首歌曲，不能更换播放地址
+		if(!search){ //搜索标志位false才会进入
+			var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
+			currentObject.addClass("list-playing").siblings().removeClass("list-playing");  // 添加正在播放样式
+			//设置专辑封面
+			var pic = currentObject.data("pic");
+			$("#music-cover").attr("src",pic);
+			//背景切换图片
+			blurImages(pic);
+			//获取音乐标题
+			var music_title = currentObject.find(".music-name").text();
+			//获取音乐作者
+			var author = currentObject.find(".auth-name").text();
+			$(".progress_msg .music_title").text(music_title+" - "+author); //设置音乐标题
+			$(document).attr("title",music_title+" - "+author); //设置网页标题
+			//获取歌词
+			var lrcSrc = currentObject.data("lrc");
+			lyricCallback(lrcSrc);
+		}
 		this.audioDom.play(); //播放
-		currentObject.addClass("list-playing").siblings().removeClass("list-playing");  // 添加正在播放样式
-		//设置专辑封面
-		var pic = currentObject.data("pic");
-		$("#music-cover").attr("src",pic);
-		//背景切换图片
-		blurImages(pic);
-		//获取音乐标题
-		var music_title = currentObject.find(".music-name").text();
-		//获取音乐作者
-		var author = currentObject.find(".auth-name").text();
-		$(".progress_msg .music_title").text(music_title+" - "+author); //设置音乐标题
-		$(document).attr("title",music_title+" - "+author); //设置网页标题
-		//获取歌词
-		var lrcSrc = currentObject.data("lrc");
-		lyricCallback(lrcSrc);
 	},
 	
 	//暂停
@@ -145,17 +148,16 @@ var krAudio = {
 			            break;
 			            
 			        case 3:  
+			        	search = false;  //搜索标志结束
 			        	//随机获取播放序号
 			            var indexRan = Math.floor(Math.random() * krAudio.allItem)+1;
 			            krAudio.Currentplay = indexRan; //设置当前播放的序号
-			            listMenuStyleChange(krAudio.Currentplay);
+			            listMenuStyleChange(krAudio.Currentplay);//列表菜单的播放暂停按钮的变换
 			            krAudio.seturl();
 			            krAudio.play();
 			            break;
-			            
 			        // case 1:
 			        default:
-			        	console.log(1)
 			            krAudio.next();  //直接下一首
 		 	    }
 			},400);
@@ -171,6 +173,7 @@ var krAudio = {
 	},
 	
 	next:function(){//下一首
+		search = false;  //搜索标志结束
 		this.Currentplay++;
 		if(this.Currentplay > this.allItem) this.Currentplay = 1;
 		listMenuStyleChange(this.Currentplay);
@@ -180,6 +183,7 @@ var krAudio = {
 	},
 	
 	prev:function(){//上一首
+		search = false;  //搜索标志结束
 		this.Currentplay--;
 		if(this.Currentplay < 1) this.Currentplay = 1;
 		listMenuStyleChange(this.Currentplay);

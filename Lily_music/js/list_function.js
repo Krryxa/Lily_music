@@ -25,6 +25,7 @@ var isMobile = {
 
 
 var isMobile = isMobile.any(); // 判断是否是移动设备
+var search = false;  //是否已经搜索
 
 var stopTag = "<span class='list-icon icon-play icon-stops' data-function='stop' title='暂停'></span>";
 var playTag = "<span class='list-icon icon-play' data-function='play' title='播放'></span>";
@@ -34,9 +35,9 @@ $(".music-list").on("click",".icon-play,.icon-download,.icon-share", function() 
     
     switch($(this).data("function")) {
         case "play": // 播放
-        	//如果当前地址为空，或者点击的歌曲与当前不一样，则选择当前点击的歌曲播放
+        	//如果当前地址为空，或者点击的歌曲与当前不一样或者处于搜索后第一次点击播放，那么选择当前点击的歌曲播放
         	var flag = krAudio.Currentplay == $(this).parents(".list-item").index() ? false : true;
-        	if(isEmpty(krAudio.audioDom.src) || flag){
+        	if(isEmpty(krAudio.audioDom.src) || flag || search){
         		krAudio.Currentplay = $(this).parents(".list-item").index();//当前播放的音乐序号
         		listMenuStyleChange(krAudio.Currentplay);  //列表菜单的播放暂停按钮的变换
 				krAudio.seturl();
@@ -78,8 +79,9 @@ function appendlistMenu(){
 }
 
 
-//列表菜单的播放暂停按钮的变换
+//列表菜单的播放暂停按钮的变换 当前点击变换成暂停样式，其他都是播放样式
 function listMenuStyleChange(Currindex){
+	search = false;  //搜索标志结束
 	var currobj = $("#main-list .list-item").eq(Currindex-1); //获取当前播放对象
 	//其他全部变成播放样式,用 not 过滤掉当前元素 
 	$(".list-item").not(currobj).each(function(index,el) {
@@ -93,6 +95,7 @@ function listMenuStyleChange(Currindex){
 // 移动端列表项单击播放
 function mobileClickPlay(){
     if(isMobile) {
+    	search = false;  //搜索标志结束
         krAudio.Currentplay = $(this).index();//当前播放的音乐序号
 		krAudio.seturl();
 		krAudio.play();
@@ -233,7 +236,7 @@ function isEmpty(val) {
 	return false;
 }
 
-/* 默认首页是网易云音乐热歌榜，处理返回的json数据用了一点es6的语法 */
+/* 默认首页是qq音乐热歌榜，处理返回的json数据用了一点es6的语法 */
 function indexSong(){
 	var count = 1;
 	loading("加载中-QQ音乐热歌榜...",500);
@@ -308,6 +311,7 @@ function searchSong(keywords){
 			}
 			html += `<div class="list-item text-center" title="全部加载完了哦~" id="list-foot">全部加载完了哦~</div>`;
 			$("#mCSB_1_container").html(html);
+			search = true; //搜索标志
 			//播放列表滚动到顶部
 			listToTop();
 			tzUtil.animates($("#tzloading"),"slideUp");//加载动画消失
@@ -400,11 +404,11 @@ function zclips(obj){
     });
 
     clipboard.on('success', function(e) {
-        loading("复制成功",5);
+        loading("复制成功",3);
     });
 
     clipboard.on('error', function(e) {
-        loading("复制失败",5);
+        loading("复制失败",3);
     });
 }
 
