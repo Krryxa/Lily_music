@@ -289,9 +289,9 @@ function searchSong(keywords){
 	$.ajax({
 		url: 'https://api.hibai.cn/api/index/index',
 		type: 'POST',
-		data: {"TransCode":"020336","OpenId":"Test","Body":{"key":keywords}},
+		data: {"TransCode":"020441","OpenId":"Test","Body":{"key":keywords}},
 		success:function(data){
-			var NECsongs = data.Body; //是个数组对象，存放多个json数据
+			var NECsongs = data.Body["qq"]; //是个数组对象，存放多个json数据
 			var length = NECsongs.length;
 			var html = `<div class="listitems list-head">
 		                    <span class="music-album">时长</span>

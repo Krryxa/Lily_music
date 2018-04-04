@@ -334,6 +334,7 @@ function palystop(){
 		//地址为空的时候，播放列表第一首
 		if(isEmpty(krAudio.audioDom.src)) {
 			krAudio.Currentplay = 1;//播放列表第一首
+			search = false; //设置搜索标志为false
 			$(".list-item").eq(0).find(".icon-play").replaceWith(stopTag);
 			krAudio.seturl();
 			krAudio.play();
@@ -348,7 +349,7 @@ function palystop(){
 
 window.onload = function(){
 
-	//加载歌曲，默认首页是网易云音乐热歌榜
+	//加载歌曲，默认首页是qq音乐热歌榜
 	indexSong();
 	//背景更据专辑图片虚化
 	initblurImgs();

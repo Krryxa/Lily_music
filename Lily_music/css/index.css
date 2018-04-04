@@ -124,6 +124,8 @@ body {
     display: none;
 }
 .header {
+    left: 28px;
+    top: 6px;
     height: 50px;
     position: absolute;
 }
@@ -135,14 +137,11 @@ body {
     -ms-transition: all 0.25s ease;
     display: inline-block;
     font-size: 23px;
-    color: #707a7a;
+    color: #fff;
     font-weight: bold;
     font-family: serif;
     cursor: pointer;
     margin: 10px 20px;
-}
-.logo:hover {
-    color: #fff;
 }
 
 /* 宽度约束容器 */
@@ -602,7 +601,7 @@ body {
     position: absolute;
     left: 10px;
     right: 10px;
-    top: 195px;
+    top: 202px;
     bottom: 10px;
     overflow: hidden;
     text-align: center;
@@ -624,10 +623,13 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: .4s;
 }
 /* 正在播放的那一句歌词 */
 #lyric .lplaying {
     color: #31c27c;
+    transition: .4s;
+    font-size:16px;
 }
 /* 歌词显示区显示的提示语(如加载中、无歌词等) */
 .lyric-tip {
