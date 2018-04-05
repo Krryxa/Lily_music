@@ -26,6 +26,7 @@ var isMobile = {
 
 var isMobile = isMobile.any(); // 判断是否是移动设备
 var search = false;  //是否已经搜索
+var mainList = ""; //滚动条
 
 var stopTag = "<span class='list-icon icon-play icon-stops' data-function='stop' title='暂停'></span>";
 var playTag = "<span class='list-icon icon-play' data-function='play' title='播放'></span>";
@@ -60,6 +61,21 @@ $(".music-list").on("click",".icon-play,.icon-download,.icon-share", function() 
     }
     return true;
 });
+
+//如果是移动端，那么滚动条操作对象就是不变的
+if(isMobile) {  
+    mainList = $("#main-list");
+} else {
+    // 滚动条初始化(只在非移动端启用滚动条控件)
+    $("#main-list").mCustomScrollbar({
+        theme:"minimal",
+        advanced:{
+            updateOnContentResize: true // 数据更新后自动刷新滚动条
+        }
+    });
+    
+    mainList = $("#main-list .mCSB_container");  
+}
 
 
 //初始化追加列表小菜单
@@ -264,16 +280,17 @@ function indexSong(){
                 count++;
 			}
 			html += `<div class="list-item text-center" title="全部加载完了哦~" id="list-foot">全部加载完了哦~</div>`;
-			$("#mCSB_1_container").html(html);
+			//添加到列表中
+			mainList.html(html);
 			// 播放列表滚动到顶部
 			listToTop();
 			tzUtil.animates($("#tzloading"),"slideUp");//加载动画消失
 			//刷新播放列表的总数
-			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
+			krAudio.allItem = mainList.children('.list-item').length-1; //减去最后一个提示框
 			//更新列表小菜单
 			appendlistMenu();
 			//移动端列表点击播放
-			$(".music-list .list-item").click(mobileClickPlay);
+			mainList.find(".list-item").click(mobileClickPlay);
 			//移动端列表右边信息按钮的点击
 			$(".list-mobile-menu").click(mobileListMenu);
 		}
@@ -310,17 +327,18 @@ function searchSong(keywords){
                 count++;
 			}
 			html += `<div class="list-item text-center" title="全部加载完了哦~" id="list-foot">全部加载完了哦~</div>`;
-			$("#mCSB_1_container").html(html);
+			//添加到列表中
+			mainList.html(html);
 			search = true; //搜索标志
 			//播放列表滚动到顶部
 			listToTop();
 			tzUtil.animates($("#tzloading"),"slideUp");//加载动画消失
 			//刷新播放列表的总数
-			krAudio.allItem = $("#mCSB_1_container").children('.list-item').length;
+			krAudio.allItem = mainList.children('.list-item').length-1;  //减去最后一个提示框
 			//更新列表小菜单
 			appendlistMenu();
 			//移动端列表点击播放
-			$(".music-list .list-item").click(mobileClickPlay);
+			mainList.find(".list-item").click(mobileClickPlay);
 			//移动端列表右边信息按钮的点击
 			$(".list-mobile-menu").click(mobileListMenu);
 		}

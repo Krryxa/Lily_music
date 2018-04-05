@@ -51,6 +51,7 @@ var krAudio = {
 	Currentplay:0, //当前播放的序号
 	allItem:0,  //当前播放列表的总数
 	orderModes:1, //播放模式，1为列表循环
+	changeURL:true, //播放地址改变的标志（意思就是并非当前歌曲暂停后点击播放的标志，就是换了一首歌的意思）
 
 	init:function(){//播放器初始化
 		this.audioDom.volume = 0.5;  //初始音量为一半
@@ -75,7 +76,8 @@ var krAudio = {
 		$(".btn-play").addClass("btn-state-paused");   //恢复暂停按钮样式
 		$("#music-progress .mkpgb-dot").addClass("dot-move");   //增加小点闪烁效果
 		//如果播放的是搜索之前的那首歌，点击暂停，再播放后应该是继续这首歌曲，不能更换播放地址
-		if(!search){ //搜索标志位false才会进入
+		//并且不能是当前歌曲暂停后继续播放，一定是播放地址改变后才能进入
+		if(!search && this.changeURL){ //搜索标志位是false和播放地址改变才会进入
 			var currentObject = $("#main-list .list-item").eq(this.Currentplay-1); //获取当前播放对象
 			currentObject.addClass("list-playing").siblings().removeClass("list-playing");  // 添加正在播放样式
 			//设置专辑封面
@@ -93,6 +95,7 @@ var krAudio = {
 			var lrcSrc = currentObject.data("lrc");
 			lyricCallback(lrcSrc);
 		}
+		this.changeURL = true;
 		this.audioDom.play(); //播放
 	},
 	
@@ -338,9 +341,10 @@ function palystop(){
 			$(".list-item").eq(0).find(".icon-play").replaceWith(stopTag);
 			krAudio.seturl();
 			krAudio.play();
-		}else{ //播放
+		}else{ //暂停后的播放，不会更换播放地址
 			//自己变成播放样式
     		currobj.find(".icon-play").replaceWith(stopTag);
+    		krAudio.changeURL = false; //当前播放地址未改变
     		krAudio.play();
 		}
 	}
