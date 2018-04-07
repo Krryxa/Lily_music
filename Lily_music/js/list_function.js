@@ -347,7 +347,8 @@ function searchSong(keywords){
 
 // 播放列表滚动到顶部
 function listToTop() {
-    $("#main-list").mCustomScrollbar("scrollTo", 0, "top");
+	if(isMobile) $("#main-list").animate({scrollTop: 0}, 200);
+    else $("#main-list").mCustomScrollbar("scrollTo", 0, "top");
 }
 
 
