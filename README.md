@@ -237,7 +237,7 @@ ES6 都出来了，那当然要好好使用，在字符串拼接的代码，均�
 ## 项目链接：
 
 在线演示：https://www.ainyi.com/Lily_music/<br>
-乐诗博客：https://www.ainyi.com<br>
+krryblog：https://ainyi.com<br>
 
 乐诗博客是一个音乐、日记分享平台，我们致力于让用户发表自己的心情，分享自己喜爱的音乐，聆听你我的声音。欢迎访问 ^_^
 
